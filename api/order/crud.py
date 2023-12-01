@@ -27,8 +27,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         await session.commit()
         return db_obj
     
-    async def get(self, session: AsyncSession, *args, **kwargs) -> Optional[ModelType]:
-        result = await session.execute(select(self._model).filter(*args).filter_by(**kwargs))
+    async def get(self, session: AsyncSession, id: int, *args, **kwargs) -> Optional[ModelType]:
+        result = await session.execute(select(self._model).filter_by(id=id))
         return result.scalars().first()
     
     async def multi_get(self, session: AsyncSession, *args, offset: int = 0, limit: int = 100, **kwargs) -> List[ModelType]:

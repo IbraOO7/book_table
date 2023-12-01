@@ -38,7 +38,7 @@ async def coupon_apply(code: str, request: Request, db: AsyncSession = Depends(g
                                          Coupon.valid_to.__ge__(now),
                                          Coupon.active == True))
         kupon = coupon.scalars().first()
-        request.session['coupon_id'] = kupon.id
+        request.session['coupon_id'] = kupon.id # Mengkuti session pada frontend
         return jsonable_encoder("Kupon Valid")
     except:
         request.session['coupon_id'] = None

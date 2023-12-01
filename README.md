@@ -7,3 +7,5 @@ Penjelasan:
     - Backend menggunakan FastAPI
     - Menggunakan SQLAlchemy Async
     - Menggunakan pydantic Versi 2.x
+
+

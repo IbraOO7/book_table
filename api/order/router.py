@@ -19,15 +19,13 @@ crud_order = CRUDBase(Order)
 
 secret_key = 'cart'
 
-# @router.get('/create_order')
-# async def order_add(request: Request, db:Session=Depends(get_db)):
-#     cart = Cart(request,db)
-#     template = env.get_template('order.html')
-#     return templates.TemplateResponse(template, {"request": request, "cart": cart})
+@router.get('/data-order/{id}')
+async def data_order(id: int ,session: AsyncSession = Depends(get_session)):
+    return await crud_order.get(session, id=id)
 
 @router.post('/create_order')
 async def order_add(order_id: int, orders: CreateOrder, background_tasks: BackgroundTasks, 
-                    request: Request, db:AsyncSession=Depends(get_session)):
+                    request: Request, coupon: str = None, db:AsyncSession=Depends(get_session)):
     cart = Cart(request, db)
     obj_in = orders.dict()
     db_order = await crud_order.create(db, obj_in)
@@ -37,6 +35,7 @@ async def order_add(order_id: int, orders: CreateOrder, background_tasks: Backgr
     result = await db.execute(select(Place).filter(Place.id == 1))
     places = result.scalars().all()
     print(places)
+    now = datetime.datetime.now()
     for item in places:
         data = {
             "price": item.price,
@@ -45,5 +44,5 @@ async def order_add(order_id: int, orders: CreateOrder, background_tasks: Backgr
         }
         await crud_order.create_order(db, data)
     mail = Mail()
-    background_tasks.add_task(mail.send_notification)
+    background_tasks.add_task(mail.send_notification) # Harus di sambungkan ke GMAIL API / Message Broker terlebih dahulu
     return jsonable_encoder("Processing Order")
