@@ -30,6 +30,7 @@ class CreatePlace(BaseModel):
     update_date: datetime
     slug: str
     rating: float
+    table_place_qty: int
     category_id: int
 
 class CategoryModel(BaseModel):

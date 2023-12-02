@@ -34,6 +34,7 @@ class Place(Base):
     update_date = Column(DateTime, default=datetime.datetime.now)
     slug = Column(String(100), unique=True)
     rating = Column(DECIMAL(scale=2))
+    table_place_qty = Column(Integer)
     
     def __init__(self, *args, **kwargs):
         if not 'slug' in kwargs:
@@ -43,4 +44,5 @@ class Place(Base):
     category_id = Column(Integer, ForeignKey("category.id"))
     category_related = relationship("Category", back_populates="place_category")
     place_order = relationship("Cost", back_populates="place_related")
+
     
